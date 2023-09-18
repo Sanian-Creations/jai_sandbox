@@ -53,6 +53,6 @@ passed a Foo to (b: $T/Base), type_of(b) is Foo
 passed a Bar to (b: $T/Base), type_of(b) is Bar
 
 But it seems that (b: Base) will behave the same as (b: $T/Base) the moment Base becomes a polymorphic struct.
-I'm 99% certain that's a bug because the MEMBER with #as should be passed to the struct, not the whole thing, that should only happen with $T/Foo notation.
+I'm 99% certain that's a bug because the MEMBER with #as should be passed to the proc, not the whole thing, *that* should only happen with $T/Foo notation.
 
 */
