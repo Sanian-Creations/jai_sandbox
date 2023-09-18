@@ -1,6 +1,6 @@
 main :: () {
 
-	set_print_style_verbose_structs();
+	set_print_style_verbose();
 
 	// code can be used to pass statements
 	code_block :: #code {
@@ -83,5 +83,4 @@ main :: () {
 	}
 }
 
-#import "Basic";
-#import,file "../jai_sanian/nicetohaves.jai";
+#load "sandbox.jai";

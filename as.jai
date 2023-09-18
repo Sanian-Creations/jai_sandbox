@@ -45,16 +45,9 @@ experiment1 :: () {
 
 experiment2 :: () {
 
-    proc :: ($huh := true) {
+    // This is a bug, see bug_as_does_not_work_for_polymorphic_structs.jai
 
-        #if true {
-            Base :: struct($N := 8) { name: string; arr: [N]u8; }
-            print("\nWhen Base is polymorphic:\n");
-        } else {
-            // Base :: struct { name: string; }
-            // print("\nWhen Base is not polymorphic:\n");
-        }
-
+    code :: #code {
         Foo :: struct { #as using base: Base; name = "Foo"; }
         Bar :: struct { #as using base: Base; name = "Bar"; }
 
@@ -70,35 +63,21 @@ experiment2 :: () {
         t_slash_base(bar);
     }
 
-    // proc(false);
-    // proc(true);
-    proc();
-    /*
-When you pass a struct with a Base member marked '#as'
-- In the case that Base is NOT polymorphic:
-  b: Base      means it implicitly passses only that member of the struct, so you always get a Base.
-  b: $T/Base   means it polymorphs a new proc for that struct and passes you the whole thing
-- In the case that Base IS polymorphic:
-  b: Base      means it polymorphs a new proc for that struct and passes you the whole thing <- !!!
-  b: $T/Base   means it polymorphs a new proc for that struct and passes you the whole thing
-
-To get the behaviour that I expected, I have to do this:
-b: Base($N)
-
-...which sort of goes against a statement from 120_polymorphic_structs,
-"The way we wrote Holder($T, $N) in do_indices_match is optional. If we want, we can just say Holder"
-It is not optional. If we want the bahaviour to stay the same, then it is mandatory.
-
-Of course, the how-to I mentioned does contain an example where this behaviour occurs, 'do_indices_match2',
-With the polymorphic struct 'Holder'. However, it only passes in variables of type Holder, and not
-types that are derived from Holder with #as, which would show this change in behaviour.
-    */
+    {
+        print("\nWhen Base is not polymorphic:\n");
+        Base :: struct { name: string; }
+        #insert,scope() code;
+    } {
+        print("\nWhen Base is polymorphic:\n");
+        Base :: struct($N := 8) { name: string; }
+        #insert,scope() code;
+    }
 }
 
 
 main :: () {
     set_print_style_verbose();
-    // experiment1();
+    experiment1();
     experiment2();
 }
 

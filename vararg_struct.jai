@@ -2,10 +2,11 @@ tuples :: () {
 
     // Lets try to use varargs on a struct to make a basic Tuple.
 
+    // This is the naive approach where we print the types as string.
     Naive_Tuple :: struct(types: ..Type) {
         #insert -> string {
             sb: String_Builder;
-            for T: types  print_to_builder(*sb, "_%: %;\n", it_index, T);
+            for types  print_to_builder(*sb, "_%: %;\n", it_index, it);
             return builder_to_string(*sb);
         }
 
@@ -23,8 +24,7 @@ tuples :: () {
     {
         #insert -> string {
             sb: String_Builder;
-            for types  print_to_builder(*sb, "_%1: types[%1];\n", it_index); // different!
-
+            for types  print_to_builder(*sb, "_%1: types[%1];\n", it_index);
             return builder_to_string(*sb);
         }
 
@@ -62,6 +62,7 @@ tuples :: () {
         // naive_foobar_tuple: Naive_Tuple(Foo, Bar);
         // print_expr(naive_foobar_tuple);
 
+        /* this one can handle it, though */
         foobar_tuple: Tuple(Foo, Bar);
         print_expr(foobar_tuple);
     }
@@ -93,12 +94,25 @@ tagged_union :: () {
             }
             return builder_to_string(*sb);
         }
+
+        /*
+        Tagged_Union(.{"thinga", int}, .{"majig", string}):
+        {
+            variant: enum {
+                NONE :: 0;
+                thinga;
+                majig;
+            }
+            thinga: #run members[0].type;
+            #place thinga;
+            majig: #run members[1].type;
+            #place thinga;
+        }
+        */
     }
 
     taggy: Tagged_Union(.{"thinga", int}, .{"majig", string});
     print_expr(taggy);
-    print_expr(size_of(type_of(taggy.variant)));
-
 }
 
 
@@ -108,5 +122,4 @@ main :: () {
     tagged_union();
 }
 
-#load "helpers.jai";
-#import "Basic";
+#load "sandbox.jai";

@@ -3,21 +3,12 @@ main :: () {
 
 	v := iview(arr, 3, 7); // [3, 7) = [3, 4, 5, 6]
 	print("%\n", v);
-
-	t1 :: View(string);
-	t2 :: View([5]u8);
-	ti1 := type_info(t1);
-	ti2 := type_info(t2);
-	print("%\n", t1);
-	print("%\n", t2);
-	print("%\n", ti1);
-	print("%\n", ti2);
-	print("%\n", ti1.*);
-	print("%\n", ti2.*);
 }
 
 #import "Basic";
 
+
+// This heper struct to determine the output type is not a good approach for reasons explained below.
 iview :: inline (arr: $Arr, from := 0, to: int) -> View(Arr).type
 #modify is_viewable(Arr)
 {
@@ -34,8 +25,10 @@ iview :: inline (arr: $Arr, from := 0, to: int) -> View(Arr).type
 }
 
 
-// Despite the #type_info_none it still adds new type info to the executable for every polymorph. they are all the same, so they probably shouldn't be separate.
-// TODO: Send email about deduplicating for type_info_none.
+// Despite the #type_info_none here, it still adds new type info to the executable for every polymorph of this struct.
+// They are all the same, yet they have different addresses, so every new one takes up extra space.
+// I guess you do want the addresses to be different so that when you compare the types they are not equal,
+// but at the same time I don't think it's good that it just keeps making the same empty type info over and over again.
 View :: struct (T: Type) #type_info_none {
 	type :: #run get_view_type(T);
 }

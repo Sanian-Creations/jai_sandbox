@@ -11,7 +11,7 @@ Bar :: struct {
 };
 
 main :: () {
-	set_print_style_verbose_structs();
+	set_print_style_verbose();
 
 	{ f: Foo; // uses default values defined in the struct
 	print("default: %\n", f); }
@@ -33,5 +33,4 @@ zero :: (mem_ptr: *$T) #expand {
  	memset(mem_ptr, 0, size_of(T));
 }
 
-#import "Basic";
-#import,file "../jai_sanian/nicetohaves.jai";
+#load "sandbox.jai";

@@ -1,5 +1,5 @@
 main :: () {
-	set_print_style_verbose_structs();
+	set_print_style_verbose();
 
 	// A FormatStruct is a struct that can be passed instead of the struct
 	// itself in order to format it in a few different ways. The .value
@@ -28,5 +28,4 @@ main :: () {
 	print("%\n", fmt);
 }
 
-#import,file "../jai_sanian/nicetohaves.jai";
-#import "Basic";
+#load "sandbox.jai";
