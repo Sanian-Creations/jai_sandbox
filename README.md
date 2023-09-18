@@ -1,3 +1,6 @@
 # Jai Sandbox
 This is where I mess around with Jai.
-There is no structure to any of it.
+
+I try out some things to see how and if they work.
+
+I end up finding a bunch of bugs and so I document those too.
