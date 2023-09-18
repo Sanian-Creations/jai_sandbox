@@ -1,35 +1,35 @@
 
-// Let's try to have macro that knows:
-// 1. args count as a constant
-// 2. the type of every argument as a constant
-
-varargs_macro :: ($args: ..Code) #expand { hardcoded_print(args); }
-
-hardcoded_print :: ($args: [$N]Code) #expand { #insert -> string {
-	sb: String_Builder;
-	template :: #string CODE
-	{
-		v := #insert args[%1];
-		print("arg %1 is of type %%, value is %%\n", type_of(v), v);
-	}
-	CODE
-	for args print_to_builder(*sb, template, it_index);
-	return builder_to_string(*sb);
-}}
-
 main :: () {
-	a := "hi";
-	b := 1;
-	c := false;
+	str := "hi";
+	boolean := false;
 
-	hardcoded_print(.[a, b, c]); // This works, but we'd like to be able to do it without the brackets.
+	varargs_code((#code 1 + 2), (#code str), (#code boolean)); // Unfortunately only this works, for now.
+    // varargs_code(1 + 2, str, boolean);                         // ...when it should be this.
 
-	// varargs_macro(a, b, c);   // like this
-	varargs_macro((#code a), (#code b), (#code c)); // unfortunately only this works, for now.
-
-	// this works, because `#code anything` is always constant
-	// the first one proclaims that the arguments are not constant, even though it should also know they are to be treated as code
+	// The above works because anything marked #code becomes constant
+	// The latter however, complains that the arguments are not constant, even though it should also know they are to be treated as code, in which case they *are* constant.
 }
 
+varargs_code :: ($args: ..Code) #expand {
+    #insert -> string {
+    	sb: String_Builder;
+    	for args  print_to_builder(*sb, #string CODE
+    	{
+    		v := #insert args[%1];
+    		print("arg %1, `%%` is of type %%, value is %%\n", #run code_to_string(args[%1]), type_of(v), v);
+    	}
+    	CODE, it_index);
+    	return builder_to_string(*sb);
+    }
+}
+
+code_to_string :: (c: Code) -> string {
+    sb: String_Builder;
+    nodes := compiler_get_nodes(c);
+    print_expression(*sb, nodes);
+    return builder_to_string(*sb);
+}
 
 #load "sandbox.jai";
+#import "Compiler";
+#import "Program_Print";
