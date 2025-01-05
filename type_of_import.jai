@@ -6,9 +6,9 @@ main :: () {
 		draw_type_name                               = true;
 	}
 
-    String :: #import "String";
-    print("String is %\n", String);
-    print("type of String is %\n", type_of(String));
-    print("type info of String is %\n", type_info(String).*);
+	String :: #import "String";
+	print("String is %\n", String);
+	print("type of String is %\n", type_of(String));
+	print("type info of String is %\n", type_info(String).*);
 }
 #import "Basic";

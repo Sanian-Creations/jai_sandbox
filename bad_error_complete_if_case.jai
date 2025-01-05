@@ -1,17 +1,17 @@
 main :: () {
-    f: Foo;
+	f: Foo;
 
-    if #complete f == {
-        // missing cases
-    }
+	if #complete f == {
+		// missing cases
+	}
 }
 
 #insert #string CODE
 Foo :: enum {
-    NOT_IN_ERROR;
-    IN_ERROR      :: 1;
-    EXPLICIT      :: 2;
-    IMPLICIT;
+	NOT_IN_ERROR;
+	IN_ERROR      :: 1;
+	EXPLICIT      :: 2;
+	IMPLICIT;
 }
 CODE;
 

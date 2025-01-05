@@ -1,5 +1,0 @@
-main :: () {
-
-}
-
-#load "sandbox.jai";

@@ -1,20 +1,5 @@
 #import "Basic";
 
-print_expr :: ($c: Code) #expand {
-	fmt_string :: #run -> string {
-		#import "Compiler";
-		#import "Program_Print";
-
-		sb: String_Builder;
-		print_expression(*sb, compiler_get_nodes(c));
-		append(*sb, " is %\n");
-
-		return builder_to_string(*sb);
-	}
-
-	print(fmt_string, #insert c);
-}
-
 set_print_style_verbose :: () {
 	using context.print_style.default_format_struct;
 	use_long_form_if_more_than_this_many_members = -1;
@@ -22,3 +7,15 @@ set_print_style_verbose :: () {
 	draw_type_name                               = true;
 }
 
+printx :: ($c: Code) #expand {
+	print("% is %\n", #run code_to_string(c), #insert c);
+}
+
+code_to_string :: ($c: Code) -> string {
+	using _ :: #import "Compiler";
+	using _ :: #import "Program_Print";
+
+	sb: String_Builder;
+	print_expression(*sb, compiler_get_nodes(c));
+	return builder_to_string(*sb);
+}

@@ -34,8 +34,8 @@ main :: () {
 	print_code :: (c: Code) { // not a macro!
 
 		// You can use Code outside of macros, but it only contains 8 bytes of data.
-		print_expr(#code c); // have to explicitly treat this c as a statement itself, not passing it through to the macro
-		print_expr(type_info(Code).*);
+		printex(#code c); // have to explicitly treat this c as a statement itself, not passing it through to the macro
+		printex(type_info(Code).*);
 
 		// In order to really do something with code you need to import "Compiler",
 		// but the procs in there can only be called at compile time. So using Code at
@@ -51,8 +51,8 @@ main :: () {
 	{
 		a   := 5;
 		ptr := *a;
-		print_expr(ptr.*);
-		print_expr(<<ptr);
+		printex(ptr.*);
+		printex(<<ptr);
 	}
 
 	{
@@ -68,10 +68,10 @@ main :: () {
 
 				builder: String_Builder;
 				append(*builder, "using ");
-        		print_expression(*builder, compiler_get_nodes(c));
-        		append(*builder, ";");
+				print_expression(*builder, compiler_get_nodes(c));
+				append(*builder, ";");
 
-        		return builder_to_string(*builder);
+				return builder_to_string(*builder);
 			}
 		}
 

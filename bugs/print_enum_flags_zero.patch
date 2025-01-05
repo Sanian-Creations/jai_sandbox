@@ -1,0 +1,17 @@
+--- "D:\\portable_programs\\jai_versions\\jai_versions_repo\\jai\\modules\\Basic\\Print.jai"	2025-01-05 02:46:36.671799400 +0100
++++ "C:\\portable_programs\\jai\\modules\\Basic\\Print.jai"	2025-01-05 03:02:30.377814800 +0100
+@@ -826,7 +826,13 @@
+             target_value := get_u64_from_void_pointer(item.value_pointer, size);  // Treat flags as unsigned, even for signed types. Simpler.
+ 
+             if target_value == 0 {
+-                append(builder, "0");
++                // Check for a named 0-value before printing 0
++                name := "0";
++                for info_enum.values  if it == 0 {
++                    name = info_enum.names[it_index];
++                    break;
++                }
++                append(builder, name);
+                 return;
+             }
+ 

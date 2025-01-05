@@ -1,0 +1,20 @@
+--- "D:\\portable_programs\\jai_versions\\jai_versions_repo\\jai\\modules\\Program_Print\\module.jai"	2025-01-04 04:02:32.500158700 +0100
++++ "C:\\portable_programs\\jai\\modules\\Program_Print\\module.jai"	2025-01-04 16:43:55.142403800 +0100
+@@ -465,6 +465,8 @@
+             ident := cast(*Code_Ident) expression;
+             if ident.flags & .DEFINES_POLYMORPH_VARIABLE  append(builder, "$"/* "$*/); // This confuses emacs, hence the weird comment.
+             if ident.flags & .HAS_SCOPE_MODIFIER  append(builder, "`");
++            c := ident.name[0];
++            if !is_alpha(c) && c != #char "_"  append(builder, "operator ");
+             append(builder, ident.name);
+         case .DECLARATION;
+             decl := cast(*Code_Declaration) expression;
+@@ -1249,6 +1251,8 @@
+         if decl.flags & .AUTO_VALUE_BAKE_IS_REQUIRED  append(builder, "$");
+         else if decl.flags & .AUTO_VALUE_BAKE         append(builder, "$$"); // "$
+ 
++        c := decl.name[0];
++        if !is_alpha(c) && c != #char "_"  append(builder, "operator ");
+         append(builder, decl.name);
+     } else {
+         if !compound {

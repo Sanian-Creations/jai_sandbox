@@ -10,12 +10,12 @@ main :: () {
 
 			// What is this var that names the loop?
 			// it is literally the value you assign to it.
-			print_expr(inner_loop); // here it's the value of i
-			print_expr(outer_loop); // for bools it is always true.
+			printex(inner_loop); // here it's the value of i
+			printex(outer_loop); // for bools it is always true.
 
 			// Can it be written to?
 			outer_loop = false; // yes it can. This does not affect the loop.
-			print_expr(outer_loop);
+			printex(outer_loop);
 
 			// this inner loop is only as an example, just break right away so it only runs once.
 			break inner_loop;
@@ -54,8 +54,8 @@ lines
 iterate_lines :: (str: *string) -> bool, string {
 	for 0..str.count-1 {
 		if str.*[it] == #char "\n" {
-			line := iview(str, to   = it);
-			str.* = iview(str, from = it+1);
+			line := view(str, 0, it);
+			str.* = view_from(str, it+1);
 			return true, line;
 		}
 	}

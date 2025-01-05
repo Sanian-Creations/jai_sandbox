@@ -19,19 +19,19 @@ main :: () {
 	f := box(e);
 	g := box(f);
 
-	print_expr(a.value_pointer);
-	print_expr(b.value_pointer);
-	print_expr(c.value_pointer);
-	print_expr(d.value_pointer);
-	print_expr(e.value_pointer);
-	print_expr(f.value_pointer);
+	printex(a.value_pointer);
+	printex(b.value_pointer);
+	printex(c.value_pointer);
+	printex(d.value_pointer);
+	printex(e.value_pointer);
+	printex(f.value_pointer);
 
-	print_expr(a);
-	print_expr(b);
-	print_expr(c);
-	print_expr(d);
-	print_expr(e);
-	print_expr(f);
+	printex(a);
+	printex(b);
+	printex(c);
+	printex(d);
+	printex(e);
+	printex(f);
 }
 
 #load "sandbox.jai";

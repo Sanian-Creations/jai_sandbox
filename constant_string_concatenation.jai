@@ -4,7 +4,7 @@ main :: () {
 
 	C :: #run String.join(A, B); // no constant concat with + like in Odin
 
-	print_expr(C);
+	printex(C);
 }
 
 #load "sandbox.jai";

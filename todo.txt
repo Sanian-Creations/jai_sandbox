@@ -3,129 +3,126 @@ DLLs 2: Specifically, dlls of this language which may have different definitions
 the context which may make calling to that dll weird because they expect the context
 to have values that we do not have in OUR context.
 
-figure out how plugins work
-
 see if I can make string concatenation with + work by using a plugin (?) or metaprogram to replace all sinstances of string + string with #run String.join(string, string);
 
 if I set settings like "do not check array bounds" does that also apply to compile time code that i put in #run?
 
 * stuff to try
 ** a macro with arbitrary amount of return values.
-    something like 'or_return', that will check the return value of a procedure for null
+	something like 'or_return', that will check the return value of a procedure for null
 
-    for this we will need to take in the procedure call as code and then we can count the number of return values by taking the
-    type_of that code, getting its type info, which will give us the return arguments.
+	for this we will need to take in the procedure call as code and then we can count the number of return values by taking the
+	type_of that code, getting its type info, which will give us the return arguments.
 
-   which will check the return value for null, and return if so. If not null, it passes all return values through.
-   It could work something like this:
-   #+begin_src jai
-    a, b, ok  := thingy();  if !ok  return;
-    ok, a, b  := thingy2(); if !ok  return;
-    err, a, b := thingy3(); if err  return;
-    a, b, err := thingy4(); if err  return;
+	which will check the return value for null, and return if so. If not null, it passes all return values through.
+	It could work something like this:
+	#+begin_src jai
+	a, b, ok  := thingy();  if !ok  return;
+	ok, a, b  := thingy2(); if !ok  return;
+	err, a, b := thingy3(); if err  return;
+	a, b, err := thingy4(); if err  return;
 
-    // instead:
-    a, b := OK(thingy(),  .LAST);
-    a, b := OK(thingy2(), .FIRST);
-    a, b := OK(thingy3(), .FIRST_ERR);
-    a, b := OK(thingy4(), .LAST_ERR);
+	// instead:
+	a, b := OK(thingy(),  .LAST);
+	a, b := OK(thingy2(), .FIRST);
+	a, b := OK(thingy3(), .FIRST_ERR);
+	a, b := OK(thingy4(), .LAST_ERR);
 
-    a, b := OK(thingy(), .LAST, #code {
-        print("couldn't get da thingy");
-        return;
-    });
+	a, b := OK(thingy(), .LAST, #code {
+		print("couldn't get da thingy");
+		return;
+	});
 
-    a, b, ok := thingy();
-    if !ok {
-        print("couldn't get da thingy");
-        return;
-    }; #discard ok;
+	a, b, ok := thingy();
+	if !ok {
+		print("couldn't get da thingy");
+		return;
+	}; #discard ok;
 
-    if !ok {
-        print("couldn't get da thingy");
-        return;
-    };
+	if !ok {
+		print("couldn't get da thingy");
+		return;
+	};
 
-   #+end_src
-   the enum is like a bitset that can specify:
-   Ok, Error, Value (exclusive, only 1 may be set)
-   - Ok: extra arg with non-zero is ok (usually boolean)
-   - Err: extra arg with a zero value is ok (cuz non-zero is some kind of error)
-   - Val: result != err_val is ok (you have to proved the error value in this case)
-   Return, Break, Continue
-   - what to do in case of error. may also not specify anything and just do whatever in the code
+	#+end_src
+	the enum is like a bitset that can specify:
+	Ok, Error, Value (exclusive, only 1 may be set)
+	- Ok: extra arg with non-zero is ok (usually boolean)
+	- Err: extra arg with a zero value is ok (cuz non-zero is some kind of error)
+	- Val: result != err_val is ok (you have to proved the error value in this case)
+	Return, Break, Continue
+	- what to do in case of error. may also not specify anything and just do whatever in the code
 
 
 ** reinterpret cast with rvalues
-   how to reinterpret-cast, or "transmute" as it is called in Odin, on rvalues (no adress)?
-   #+begin_src jai
-	 f  : float32 = 4.5;
-	 i  : int     = << cast(*int) *f;         // is possible, f is a lvalue, it has a location which can be pointed to
-	 i2 : int     = << cast(*int) *(f * 3.3); // isn't possible because we are taking a pointer to an rvalue. So how to do this?
-   #+end_src
+	how to reinterpret-cast, or "transmute" as it is called in Odin, on rvalues (no adress)?
+	#+begin_src jai
+	f  : float32 = 4.5;
+	i  : int     = << cast(*int) *f;         // is possible, f is a lvalue, it has a location which can be pointed to
+	i2 : int     = << cast(*int) *(f * 3.3); // isn't possible because we are taking a pointer to an rvalue. So how to do this?
+	#+end_src
 ** block returning a value
-   Can you make blocks which return a value? with #insert, the syntax is `#insert thing`.
-   In the case of building a body of a procedure or struct, you use `#insert -> string { ... }`.
-   Here, `thing` is replaced with `-> string { ... }`. This seems to mean "codeblock returning a string".
-   If this is syntactically consistent, you should be able to use this in other ways as well.
-   So is this possible?
-   #+begin_src jai
-	 six_factorial := -> int {
-	   x := 1;
-	   for 2..6 {
-		 x *= it;
-	   }
-	   return x;
-	 }
-   #+end_src
+	Can you make blocks which return a value? with #insert, the syntax is `#insert thing`.
+	In the case of building a body of a procedure or struct, you use `#insert -> string { ... }`.
+	Here, `thing` is replaced with `-> string { ... }`. This seems to mean "codeblock returning a string".
+	If this is syntactically consistent, you should be able to use this in other ways as well.
+	So is this possible?
+	#+begin_src jai
+	six_factorial := -> int {
+		x := 1;
+		for 2..6 {
+			x *= it;
+		}
+		return x;
+	}
+	#+end_src
 
 ** macro-making macro
-   Can you make a macro which inserts another macro into the scope?
-   #+begin_src jai
-	 macro_maker :: (magic_nr: s32) #expand { // calling this macro will insert another macro into the scope.
+	Can you make a macro which inserts another macro into the scope?
+	#+begin_src jai
+	macro_maker :: (magic_nr: s32) #expand { // calling this macro will insert another macro into the scope.
 
-	   // This is the macro that is inserted.
-	   // The value it adds to your input depends on the argument passed to macro_maker.
-	   add :: (value: s32) -> s32 #expand {
-		 return value + magic_nr;
-	   }
+		// This is the macro that is inserted.
+		// The value it adds to your input depends on the argument passed to macro_maker.
+		add :: (value: s32) -> s32 #expand {
+			return value + magic_nr;
+		}
+	}
 
-	 }
+	{
+		macro_maker(5);  // a macro named "add" is added to the scope
+		nice :: add(64); // add() will add 5 (variable can be a constant because the we are using a macro, not a function)
+	}
 
-	 {
-	   macro_maker(5);  // a macro named "add" is added to the scope
-	   nice :: add(64); // add() will add 5 (variable can be a constant because the we are using a macro, not a function)
-	 }
-
-	 {
-	   macro_maker(411);  // a macro named "add" is added to the scope
-	   blazeit :: add(9); // add() will add 411
-	 }
-   #+end_src
+	{
+		macro_maker(411);  // a macro named "add" is added to the scope
+		blazeit :: add(9); // add() will add 411
+	}
+	#+end_src
 
 ** how to easily get array-views
-   in Odin you can easily get a slice of an array or dynamic array by typing
-   #+begin_src odin
-	 arr   : [25] u8;
-	 slice :   [] u8 = arr[3:5]; // gives back slice starting at index 1 of length 2 (5-3), meaning index 5 is not included
-   #+end_src
+	in Odin you can easily get a slice of an array or dynamic array by typing
+	#+begin_src odin
+	arr   : [25] u8;
+	slice :   [] u8 = arr[3:5]; // gives back slice starting at index 1 of length 2 (5-3), meaning index 5 is not included
+	#+end_src
 
 ** With New(), does it initialize the memory with default values? If so, how?
 ** Circular dependencies with #run
-   Say I have a struct, which relies on a procedure called with #run, but the procedure relies on the struct.
-   What happens?
+	Say I have a struct, which relies on a procedure called with #run, but the procedure relies on the struct.
+	What happens?
 
-   #+begin_src jai
-	 Foo :: struct(num: i32) {
-	  arr : [#run difficult_calculation(num)] u8;
-	 }
+	#+begin_src jai
+	Foo :: struct(num: i32) {
+		arr : [#run difficult_calculation(num)] u8;
+	}
 
-	 difficult_calculation :: (num: i32) -> i32 {
-	  dependency: Foo(5);
-	  result: i32;
-	  for dependency.arr {
-	   result += it_index;
-	  }
-	  return result + 10; // add 10 just te be sure that the answer can't be 0
-	 }
-   #+end_src
+	difficult_calculation :: (num: i32) -> i32 {
+		dependency: Foo(5);
+		result: i32;
+		for dependency.arr {
+			result += it_index;
+		}
+		return result + 10; // add 10 just te be sure that the answer can't be 0
+	}
+	#+end_src

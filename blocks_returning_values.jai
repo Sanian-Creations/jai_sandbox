@@ -52,7 +52,7 @@ main :: () {
 			if !ok return; v;// <- note I have to put this here to return it from the block
 		};
 
-		print_expr(value);
+		printex(value);
 	}
 
 	try_get_the_value(false);
@@ -111,8 +111,8 @@ main :: () {
 			if !ok return;
 			// <- no expression here
 		}
-		print_expr(value); // it prints void!
-		print_expr(type_of(value)); // it prints void!
+		printex(value); // it prints void!
+		printex(type_of(value)); // it prints void!
 
 		// It reads the `if !ok return;` as an expression, but it is a statement which
 		// does not return anything, so it returns void

@@ -1,15 +1,14 @@
-
 main :: () {
-    print("huh!\n");
+	print("huh!\n");
 }
 
 not_used :: () {
-    #import "Basic";
+	#import "Basic";
 }
 
 #scope_file
 
-print_expr :: ($c: Code) #expand {
+printex :: ($c: Code) #expand {
 	{
 		#import "Basic";
 		fmt_string :: #run -> string {

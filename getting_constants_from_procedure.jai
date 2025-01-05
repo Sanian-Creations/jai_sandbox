@@ -12,7 +12,7 @@ main :: () {
 
 	// But can you do the same to get constants from baked procedures?
 	// The answer is No, unfortunately.
-    /*
+	/*
 	poly_proc :: ($N: int, thing: $T) { }
 
 	baked_poly_proc :: #procedure_of_call poly_proc(34, "with airplane food?");

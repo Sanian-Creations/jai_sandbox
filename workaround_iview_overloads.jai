@@ -35,22 +35,22 @@ View :: struct (T: Type) #type_info_none {
 
 is_viewable :: (T: Type) #expand {
 	ti := cast(*Type_Info) ifx is_pointer_type(T) then get_pointed_at_type(T) else T;
-    if ti.type == .ARRAY || ti.type == .STRING {
+	if ti.type == .ARRAY || ti.type == .STRING {
 		`return true;
-    } else {
+	} else {
 		`return false, "Must pass a string or array type, or pointer to one.";
-    }
+	}
 }
 
 get_view_type :: ($T_in: Type) -> Type {
 	T :: #ifx #run is_pointer_type(T_in) then #run get_pointed_at_type(T_in); else T_in;
-    #if T == string {
+	#if T == string {
 		return string;
 	} else #if #run type_info(T).type == .ARRAY {
 		Element :: #run get_element_type(T);
 		return []Element;
 	} else {
-	   #assert false "Passed non-viewable type to get_view_type";
+		#assert false "Passed non-viewable type to get_view_type";
 	}
 }
 
